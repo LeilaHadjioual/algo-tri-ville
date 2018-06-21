@@ -10,14 +10,16 @@ function distanceFromGrenoble(city) {
     var GrenobleLong = 5.716667;
     var cityLat = city.latitude;
     var cityLong = city.longitude;
+
     var R = 6371;
     var grenobleRadLat = Math.toRadians(GrenobleLat);
     var cityRadLat = Math.toRadians(cityLat);
-    var lat = Math.toRadians(cityLat - GrenobleLat);
-    var long = Math.toRadians(cityLong - GrenobleLong);
-    var a = Math.sin(lat / 2) * Math.sin(lat / 2) +
+    var radiansLat = Math.toRadians(cityLat - GrenobleLat);
+    var radiansLong = Math.toRadians(cityLong - GrenobleLong);
+
+    var a = Math.sin(radiansLat / 2) * Math.sin(radiansLat / 2) +
         Math.cos(grenobleRadLat) * Math.cos(cityRadLat) *
-        Math.sin(long / 2) * Math.sin(long / 2);
+        Math.sin(radiansLong / 2) * Math.sin(radiansLong / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
     return d;
@@ -25,18 +27,20 @@ function distanceFromGrenoble(city) {
 
 function swap(i, j) // Swap the values in array csvData
 {
+    displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
     var tmp = csvData[i];
     csvData[i] = csvData[j];
     csvData[j] = tmp;
-    displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
+
     // console.log("implement me !");
 }
 
 function isLess(A, B) {
+    displayBuffer.push(['compare', A, B]); // Do not delete this line (for display)
     if (A.dist < B.dist) {
         return true;
     }
-    displayBuffer.push(['compare', A, B]); // Do not delete this line (for display)
+
 }
 
 function insertsort() {
@@ -44,6 +48,8 @@ function insertsort() {
         for (var k = i; k > 0; k--) {
             if (isLess(csvData[k], csvData[k - 1])) {
                 swap(k, k - 1);
+            } else {
+                break; // stoppe la 2ème boucle
             }
         }
     }
@@ -56,11 +62,9 @@ function selectionsort() {
         for (var j = i + 1; j < csvData.length; j++) {
             if (isLess(csvData[j], csvData[k])) {
                 k = j;
-                if (isLess(csvData[k], csvData[i])) {
-                    swap(k, i);
-                }
             }
         }
+        swap(k, i);
     }
 }
 
